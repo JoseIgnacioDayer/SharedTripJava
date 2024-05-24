@@ -1,5 +1,5 @@
 package entidades;
 
-public class Colol {
+public class Milron {
 
 }
