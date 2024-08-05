@@ -1,13 +1,13 @@
 package entidades;
 
 public class Usuario {
-	int idUsuario;
-	String usuario;
-	String clave;
-	String nombre;
-	String apellido;
-	String correo;
-	int telefono;
+	private int idUsuario;
+	public String usuario;
+	public String clave;
+	public String nombre;
+	public String apellido;
+	public String correo;
+	public String telefono;
 	
 	public int getIdUsuario() {
 		return idUsuario;
@@ -51,15 +51,21 @@ public class Usuario {
 		this.correo = correo;
 	}
 	
-	public int getTelefono() {
+	public String getTelefono() {
 		return telefono;
 	}
-	public void setTelefono(int telefono) {
+	public void setTelefono(String telefono) {
 		this.telefono = telefono;
 	}
 	
+	
+	public Usuario() {
+		
+	}
+
+	
 	public Usuario(int idUsuario, String usuario, String clave, String nombre, String apellido, String correo,
-			int telefono) {
+			String telefono) {
 		super();
 		this.idUsuario = idUsuario;
 		this.usuario = usuario;

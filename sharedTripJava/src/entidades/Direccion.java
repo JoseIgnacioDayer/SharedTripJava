@@ -1,20 +1,21 @@
 package entidades;
 
 public class Direccion {
-	public int idDireccion; 
+	public int usuario_direccion; 
 	public String calle;
 	public int altura;
 	public String localidad;
 	
 	// ---------------------------------------- GETTERS AND SETTERS --------------------------------------
-	public int getIdDireccion() {
-		return idDireccion;
-	}
-	public void setIdDireccion(int idDireccion) {
-		this.idDireccion = idDireccion;
-	}
+
 	public String getCalle() {
 		return calle;
+	}
+	public int getUsuario_direccion() {
+		return usuario_direccion;
+	}
+	public void setUsuario_direccion(int usuario_direccion) {
+		this.usuario_direccion = usuario_direccion;
 	}
 	public void setCalle(String calle) {
 		this.calle = calle;
@@ -33,12 +34,16 @@ public class Direccion {
 	}
 	
 	// ---------------------------------------- CONSTRUCTOR --------------------------------------
-	public Direccion(int idDireccion, String calle, int altura, String localidad) {
+	public Direccion() {
+		
+	}
+	
+	
+	public Direccion(int usuario_direccion, String calle, int altura, String localidad) {
 		super();
-		this.idDireccion = idDireccion;
+		this.usuario_direccion = usuario_direccion;
 		this.calle = calle;
 		this.altura = altura;
 		this.localidad = localidad;
-	}
-	
+		}
 }

@@ -1,41 +1,36 @@
 package entidades;
+import java.util.Date;
 
 public class Viaje {
-	public int idViaje;
-	public String fecha;
-	public int vacantes;
-	public int vacantesDisponibles;
+	private int idViaje;
+	public Date fecha;
+	public int lugares_disponibles;
 	public String origen;
 	public String destino; 
-	public double precioUnitario;
+	public double precio_unitario;
 	public boolean baja;
-	public String lugarSalida;
-	public String tiempoCancelacion; //fijarse el tipo
+	public String lugar_salida;
+	public String tiempo_cancelacion; //fijarse el tipo
+	public int id_conductor;
 	
-	// ---------------------------------------- GETTERS AND SETTERS --------------------------------------
+	
 	public int getIdViaje() {
 		return idViaje;
 	}
 	public void setIdViaje(int idViaje) {
 		this.idViaje = idViaje;
 	}
-	public String getFecha() {
+	public Date getFecha() {
 		return fecha;
 	}
-	public void setFecha(String fecha) {
+	public void setFecha(Date fecha) {
 		this.fecha = fecha;
 	}
-	public int getVacantes() {
-		return vacantes;
+	public int getLugares_disponibles() {
+		return lugares_disponibles;
 	}
-	public void setVacantes(int vacantes) {
-		this.vacantes = vacantes;
-	}
-	public int getVacantesDisponibles() {
-		return vacantesDisponibles;
-	}
-	public void setVacantesDisponibles(int vacantesDisponibles) {
-		this.vacantesDisponibles = vacantesDisponibles;
+	public void setLugares_disponibles(int lugares_disponibles) {
+		this.lugares_disponibles = lugares_disponibles;
 	}
 	public String getOrigen() {
 		return origen;
@@ -49,11 +44,11 @@ public class Viaje {
 	public void setDestino(String destino) {
 		this.destino = destino;
 	}
-	public double getPrecioUnitario() {
-		return precioUnitario;
+	public double getPrecio_unitario() {
+		return precio_unitario;
 	}
-	public void setPrecioUnitario(double precioUnitario) {
-		this.precioUnitario = precioUnitario;
+	public void setPrecio_unitario(double precio_unitario) {
+		this.precio_unitario = precio_unitario;
 	}
 	public boolean isBaja() {
 		return baja;
@@ -61,33 +56,38 @@ public class Viaje {
 	public void setBaja(boolean baja) {
 		this.baja = baja;
 	}
-	public String getLugarSalida() {
-		return lugarSalida;
+	public String getLugar_salida() {
+		return lugar_salida;
 	}
-	public void setLugarSalida(String lugarSalida) {
-		this.lugarSalida = lugarSalida;
+	public void setLugar_salida(String lugar_salida) {
+		this.lugar_salida = lugar_salida;
 	}
-	public String getTiempoCancelacion() {
-		return tiempoCancelacion;
+	public String getTiempo_cancelacion() {
+		return tiempo_cancelacion;
 	}
-	public void setTiempoCancelacion(String tiempoCancelacion) {
-		this.tiempoCancelacion = tiempoCancelacion;
+	public void setTiempo_cancelacion(String tiempo_cancelacion) {
+		this.tiempo_cancelacion = tiempo_cancelacion;
+	}
+	public int getId_conductor() {
+		return id_conductor;
+	}
+	public void setId_conductor(int id_conductor) {
+		this.id_conductor = id_conductor;
 	}
 	
-	// ---------------------------------------- CONSTRUCTOR --------------------------------------
-	public Viaje(int idViaje, String fecha, int vacantes, int vacantesDisponibles, String origen, String destino,
-			double precioUnitario, boolean baja, String lugarSalida, String tiempoCancelacion) {
+	public Viaje(int idViaje, Date fecha, int lugares_disponibles, String origen, String destino,
+			double precio_unitario, boolean baja, String lugar_salida, String tiempo_cancelacion, int id_conductor) {
 		super();
 		this.idViaje = idViaje;
 		this.fecha = fecha;
-		this.vacantes = vacantes;
-		this.vacantesDisponibles = vacantesDisponibles;
+		this.lugares_disponibles = lugares_disponibles;
 		this.origen = origen;
 		this.destino = destino;
-		this.precioUnitario = precioUnitario;
+		this.precio_unitario = precio_unitario;
 		this.baja = baja;
-		this.lugarSalida = lugarSalida;
-		this.tiempoCancelacion = tiempoCancelacion;
+		this.lugar_salida = lugar_salida;
+		this.tiempo_cancelacion = tiempo_cancelacion;
+		this.id_conductor = id_conductor;
 	}
-
+	
 }
