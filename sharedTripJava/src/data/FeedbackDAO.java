@@ -1,36 +1,33 @@
 package data;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.LinkedList;
 
-import entidades.Vehiculo;
+import entidades.*;
 
-public class VehiculoDAO {
+public class FeedbackDAO {
 	
 	
-	public LinkedList<Vehiculo> getAll(){
+	public LinkedList<Feedback> getAll(){
 	Statement stmt=null;
 	ResultSet rs=null;
-	LinkedList<Vehiculo> vehiculos= new LinkedList<>();
+	LinkedList<Feedback> feedbacks= new LinkedList<>();
 	
 	try {
 		stmt= ConnectionDB.getInstancia().getConn().createStatement();
-		rs= stmt.executeQuery("select patente,modelo, anio, usuario_duenio_id from vehiculos");
+		rs= stmt.executeQuery("select fecha_hora,id_usuario_calificado, puntuacion, observacion from feedback");
 		
 		if(rs!=null) {
 			while(rs.next()) {
-				Vehiculo v=new Vehiculo();
+				Feedback f=new Feedback();
 				
-				v.setPatente(rs.getInt("patente"));
-				v.setModelo(rs.getString("modelo"));
-				v.setAnio(rs.getInt("anio"));
-				v.setUsuario_duenio_id(rs.getInt("usuario_duenio_id"));
+				f.setFecha_hora(rs.getDate("fecha_hora"));
+				f.setId_usuario_calificado(rs.getInt("id_usuario_calificado"));
+				f.setObservacion(rs.getString("observacion"));
+				f.setPuntuacion(rs.getInt("puntuacion"));
 
 				
-				vehiculos.add(v);
+				feedbacks.add(f);
 			}
 		}
 		
@@ -50,26 +47,30 @@ public class VehiculoDAO {
 		}
 	}
 	
-	return vehiculos;}
+	return feedbacks;
+	}
 
-public Vehiculo getByPatente(int patente) {
-
-	Vehiculo v=null;
+public LinkedList<Feedback> getByUser(Usuario u) {
+	
+	LinkedList<Feedback> fs = new LinkedList<>();
+	
+	Feedback f=null;
 	PreparedStatement stmt=null;
 	ResultSet rs=null;
 	try {
 		stmt=ConnectionDB.getInstancia().getConn().prepareStatement(
-				"select patente,modelo, anio, usuario_duenio_id from vehiculos where patente=?"
+				"select fecha_hora,id_usuario_calificado, puntuacion, observacion from feedback where id_usuario_calificado=?"
 				); 
-		stmt.setInt(1, patente);
+		stmt.setInt(1, u.getIdUsuario());
 		
 		rs=stmt.executeQuery();
 		if(rs!=null && rs.next()) {
-			v=new Vehiculo();
-				v.setPatente(rs.getInt("patente"));
-				v.setModelo(rs.getString("modelo"));
-				v.setAnio(rs.getInt("anio"));
-				v.setUsuario_duenio_id(rs.getInt("usuario_duenio_id"));
+			f=new Feedback();
+			f.setFecha_hora(rs.getDate("fecha_hora"));
+			f.setId_usuario_calificado(rs.getInt("id_usuario_calificado"));
+			f.setObservacion(rs.getString("observacion"));
+			f.setPuntuacion(rs.getInt("puntuacion"));
+			
 		}
 	} catch (SQLException e) {
 		e.printStackTrace(); 
@@ -83,24 +84,24 @@ public Vehiculo getByPatente(int patente) {
 		}
 	}
 	
-	return v;
+	return fs;
 }
 
 
 
-public void add(Vehiculo v) {
+public void add(Feedback f) {
 	PreparedStatement stmt= null;
 	ResultSet keyResultSet=null;
 	try {
 		stmt=ConnectionDB.getInstancia().getConn().
 				prepareStatement(
-						"insert into vehiculos(patente, modelo, anio, usuario_duenio_id) values(?,?,?,?)",
+						"insert into feedback(fecha_hora,id_usuario_calificado, puntuacion, observacion) values(?,?,?,?)",
 						PreparedStatement.RETURN_GENERATED_KEYS
 						);
-		stmt.setInt(1, v.getPatente());
-		stmt.setString(2, v.getModelo());
-		stmt.setInt(3, v.getAnio());
-		stmt.setInt(4, v.getUsuario_duenio_id());
+		stmt.setDate(1, f.getFecha_hora());
+		stmt.setInt(2, f.getId_usuario_calificado());
+		stmt.setInt(3, f.getPuntuacion());
+		stmt.setString(4, f.getObservacion());
 	
 
 		stmt.executeUpdate();
@@ -121,8 +122,8 @@ public void add(Vehiculo v) {
 }
 
 
-
-public void update(Vehiculo v, int patente) {
+/*
+public void update(Feedback f, Date fh) {
 	PreparedStatement stmt = null;
 	
 	try {
@@ -149,23 +150,24 @@ public void update(Vehiculo v, int patente) {
 		}
     }
 }
+*/
 
-
-
-public void delete(Vehiculo v) {
+public void delete(Feedback f) {
 	
 	PreparedStatement stmt=null;
 	try {
 		stmt=ConnectionDB.getInstancia().getConn().prepareStatement(
-				"delete * from vehiculos where patente=?"
+				"delete * from feedback where fecha_hora=? and id_usuario_calificado=?"
 				);
-		stmt.setInt(1, v.getPatente());
+		stmt.setDate(1, f.getFecha_hora());
+		stmt.setInt(2, f.getId_usuario_calificado());
 		int rowsAffected = stmt.executeUpdate();
 		
 		if(rowsAffected > 1) {
-			System.out.println("Se ha borrado el vehiculo con la patente: " +  v.getPatente());
+			System.out.println("Se ha borrado el feedback con el id usuario: " +  f.getId_usuario_calificado() + "y la fecha: " + f.getFecha_hora());
+			
 		}else {
-			System.out.println("No se ha encontrado ningún vehiculo");
+			System.out.println("No se ha encontrado ningún Feedback");
 		}
 		
 	} catch (SQLException e) {
