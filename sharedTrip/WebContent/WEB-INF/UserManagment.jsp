@@ -9,8 +9,8 @@
 <title>SharedTrip</title>
 <%
 	Usuario u = (Usuario)session.getAttribute("usuario");
-	LinkedList<Usuario> users = (LinkedList<Usuario>)request.getAttribute("listaUsuarios");
-
+	LinkedList<?> users = (LinkedList<?>)request.getAttribute("listaUsuarios"); //puse el ? para que no me tire warning
+	
 %>
 </head>
 <body>
