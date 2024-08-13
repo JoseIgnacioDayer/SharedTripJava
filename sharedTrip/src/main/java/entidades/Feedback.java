@@ -1,5 +1,5 @@
 package entidades;
-import java.util.Date;
+import java.sql.Date;
 
 public class Feedback {
 	public int puntuacion;
@@ -38,6 +38,9 @@ public class Feedback {
 		this.observacion = observacion;
 		this.fecha_hora = fecha_hora;
 		this.id_usuario_calificado = id_usuario_calificado;
+	}
+	public Feedback() {
+		// TODO Auto-generated constructor stub
 	}
 	
 }

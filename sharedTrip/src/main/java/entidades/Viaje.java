@@ -1,5 +1,5 @@
 package entidades;
-import java.util.Date;
+import java.sql.Date;
 
 public class Viaje {
 	private int idViaje;
@@ -8,7 +8,7 @@ public class Viaje {
 	public String origen;
 	public String destino; 
 	public double precio_unitario;
-	public boolean baja;
+	public boolean cancelado;
 	public String lugar_salida;
 	public String tiempo_cancelacion; //fijarse el tipo
 	public int id_conductor;
@@ -50,11 +50,11 @@ public class Viaje {
 	public void setPrecio_unitario(double precio_unitario) {
 		this.precio_unitario = precio_unitario;
 	}
-	public boolean isBaja() {
-		return baja;
+	public boolean isCancelado() {
+		return cancelado;
 	}
-	public void setBaja(boolean baja) {
-		this.baja = baja;
+	public void setCancelado(boolean cancelado) {
+		this.cancelado = cancelado;
 	}
 	public String getLugar_salida() {
 		return lugar_salida;
@@ -76,7 +76,7 @@ public class Viaje {
 	}
 	
 	public Viaje(int idViaje, Date fecha, int lugares_disponibles, String origen, String destino,
-			double precio_unitario, boolean baja, String lugar_salida, String tiempo_cancelacion, int id_conductor) {
+			double precio_unitario, boolean cancelado, String lugar_salida, String tiempo_cancelacion, int id_conductor) {
 		super();
 		this.idViaje = idViaje;
 		this.fecha = fecha;
@@ -84,10 +84,13 @@ public class Viaje {
 		this.origen = origen;
 		this.destino = destino;
 		this.precio_unitario = precio_unitario;
-		this.baja = baja;
+		this.cancelado = cancelado;
 		this.lugar_salida = lugar_salida;
 		this.tiempo_cancelacion = tiempo_cancelacion;
 		this.id_conductor = id_conductor;
+	}
+	public Viaje() {
+		// TODO Auto-generated constructor stub
 	}
 	
 }

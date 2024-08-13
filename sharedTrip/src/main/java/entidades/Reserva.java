@@ -1,5 +1,5 @@
 package entidades;
-import java.util.Date;
+import java.sql.Date;
 
 public class Reserva {
 	public Date fecha_reserva;
@@ -49,6 +49,9 @@ public class Reserva {
 		this.reserva_cancelada = reserva_cancelada;
 		this.id_viaje = id_viaje;
 		this.id_pasajero_reserva = id_pasajero_reserva;
+	}
+	public Reserva() {
+		// TODO Auto-generated constructor stub
 	}
 	
 	

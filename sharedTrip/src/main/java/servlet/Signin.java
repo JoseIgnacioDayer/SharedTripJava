@@ -1,6 +1,8 @@
 package servlet;
 
 import java.io.IOException;
+import java.util.LinkedList;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -45,13 +47,12 @@ public class Signin extends HttpServlet {
 		u.setCorreo(correo);
 		u.setClave(clave);
 		u = ctrl.validate(u);
+		LinkedList<Usuario> usuarios = ctrl.getAll();
 		
-		if(u == null) {
-			System.out.println("No existe el usuario");
-		}else {
+		request.getSession().setAttribute("usuario", u);
+		request.setAttribute("listaUsuarios", usuarios);
 		
-		response.getWriter().append("Nombre: ").append(u.getNombre()).append("  ").append("Apellido: ").append(u.getApellido());
-		}
+		request.getRequestDispatcher("WEB-INF/UserManagment.jsp");
 		
 	}
 
