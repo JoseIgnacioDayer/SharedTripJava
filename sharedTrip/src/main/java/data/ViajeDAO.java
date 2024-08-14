@@ -11,11 +11,11 @@ public class ViajeDAO {
 	public LinkedList<Viaje> getAll(){
 	Statement stmt=null;
 	ResultSet rs=null;
-	LinkedList<Viaje> viajes= new LinkedList<>();
+	LinkedList<Viaje> viajes = new LinkedList<>();
 	
 	try {
 		stmt= ConnectionDB.getInstancia().getConn().createStatement();
-		rs= stmt.executeQuery("select id_viaje,fecha, lugares_disponibles, origen, destino,precio_unitario, cancelado,tiempo_cancelacion, id_conductor, lugar_salida from viajes");
+		rs= stmt.executeQuery("select * from viajes");
 		
 		if(rs!=null) {
 			while(rs.next()) {

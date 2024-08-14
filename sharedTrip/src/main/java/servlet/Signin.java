@@ -9,10 +9,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import entidades.Usuario;
+import entidades.Viaje;
 import logic.UserController;
-/**
- * Servlet implementation class Signin
- */
+import logic.ViajeController;
+
 @WebServlet({ "/signin", "/Signin", "/SIGNIN", "/SignIn", "/signIn" })
 public class Signin extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -35,16 +35,17 @@ public class Signin extends HttpServlet {
 		UserController ctrl = new UserController();
 		String correo = request.getParameter("email");
 		String clave = request.getParameter("password");
-		
 		u.setCorreo(correo);
 		u.setClave(clave);
 		u = ctrl.validate(u);
-		LinkedList<Usuario> usuarios = ctrl.getAll();
+		
+		ViajeController ctrlViaje = new ViajeController();
+		LinkedList<Viaje> viajes = ctrlViaje.getAll();
 		
 		request.getSession().setAttribute("usuario", u);
-		request.setAttribute("listaUsuarios", usuarios);
+		request.setAttribute("viajes", viajes);
 		
-		request.getRequestDispatcher("WEB-INF/UserManagment.jsp");
+		request.getRequestDispatcher("WEB-INF/viajes.jsp").forward(request, response);
 		
 	}
 
