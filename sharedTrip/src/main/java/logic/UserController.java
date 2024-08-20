@@ -24,6 +24,10 @@ public class UserController {
 	public LinkedList<Usuario> getAll(){
 		return usuarioDAO.getAll();
 	}
+	
+	public void addUser(Usuario u) {
+		usuarioDAO.add(u);
+	}
 
 
 }

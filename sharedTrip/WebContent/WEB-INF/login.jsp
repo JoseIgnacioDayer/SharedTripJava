@@ -3,8 +3,8 @@
 	<h2>Iniciar Sesión</h2>
 	<form action="signin" method="POST">
 		<div class="form-group">
-			<label for="email">Correo Electrónico</label> 
-			<input type="email" id="email" name="email" required>
+			<label for="user">Usuario</label> 
+			<input type="text" id="user" name="usuario" required>
 		</div>
 		<div class="form-group">
 			<label for="password">Contraseña</label> 
@@ -12,6 +12,7 @@
 		</div>
 		<button type="submit" class="login-btn">Ingresar</button>
 		<a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
+		<a href="register.jsp" class="forgot-password">Registrarse Aquí</a>
 	</form>
 </div>
 

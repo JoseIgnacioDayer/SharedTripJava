@@ -33,19 +33,26 @@ public class Signin extends HttpServlet {
 		
 		Usuario u = new Usuario();
 		UserController ctrl = new UserController();
-		String correo = request.getParameter("email");
+		String usuario = request.getParameter("usuario");
 		String clave = request.getParameter("password");
-		u.setCorreo(correo);
+		u.setUsuario(usuario);
 		u.setClave(clave);
 		u = ctrl.validate(u);
 		
-		ViajeController ctrlViaje = new ViajeController();
-		LinkedList<Viaje> viajes = ctrlViaje.getAll();
+		if(u==null) {
+			response.sendRedirect("index.jsp");
+		}else {
+			ViajeController ctrlViaje = new ViajeController();
+			LinkedList<Viaje> viajes = ctrlViaje.getAll();
+			
+			request.getSession().setAttribute("usuario", u);
+			request.setAttribute("viajes", viajes);
+			
+			request.getRequestDispatcher("WEB-INF/viajes.jsp").forward(request, response);
+			
+		}
 		
-		request.getSession().setAttribute("usuario", u);
-		request.setAttribute("viajes", viajes);
-		
-		request.getRequestDispatcher("WEB-INF/viajes.jsp").forward(request, response);
+
 		
 	}
 

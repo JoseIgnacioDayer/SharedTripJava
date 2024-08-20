@@ -58,19 +58,21 @@ public class UserDAO {
 		ResultSet rs=null;
 		try {
 			stmt=ConnectionDB.getInstancia().getConn().prepareStatement(
-					"select id_usuario,usuario,nombre,apellido,correo,telefono from usuarios where correo=? and clave=?"
+					"select id_usuario,usuario,nombre,apellido,correo,telefono from usuarios where usuario=? and clave=?"
 					);
-			stmt.setString(1, user.getCorreo());
+			stmt.setString(1, user.getUsuario());
 			stmt.setString(2, user.getClave());
 			rs=stmt.executeQuery();
 			if(rs!=null && rs.next()) {
 				u=new Usuario();
 				
 				u.setIdUsuario(rs.getInt("id_usuario"));
+				u.setUsuario(rs.getString("usuario"));
 				u.setNombre(rs.getString("nombre"));
 				u.setApellido(rs.getString("apellido"));
 				u.setCorreo(rs.getString("correo"));
 				u.setTelefono(rs.getString("telefono"));
+				
 
 			}
 		} catch (SQLException e) {
