@@ -9,7 +9,7 @@
 </head>
 <body>
 
-<jsp:include page="WEB-INF/header.jsp"></jsp:include>
+<jsp:include page="header.jsp"></jsp:include>
 
 <div class="container-fluid">
 	<div class="row align-items-center d-flex justify-content-center" >
@@ -50,7 +50,7 @@
 		<div class="col-md-3 d-none d-md-block"></div>
 	</div>
 	
-	<jsp:include page="WEB-INF/footer.jsp"></jsp:include>
+	<jsp:include page="footer.jsp"></jsp:include>
 	
 </div>
 
