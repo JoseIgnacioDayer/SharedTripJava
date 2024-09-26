@@ -1,18 +1,18 @@
 package entidades;
-import java.sql.Date;
+
 
 public class Reserva {
-	public Date fecha_reserva;
+	public String fecha_reserva;
 	public int cantidad_pasajeros_reservada;
 	public boolean reserva_cancelada;
 	public int id_viaje;
 	public int id_pasajero_reserva;
 	
 	
-	public Date getFecha_reserva() {
+	public String getFecha_reserva() {
 		return fecha_reserva;
 	}
-	public void setFecha_reserva(Date fecha_reserva) {
+	public void setFecha_reserva(String fecha_reserva) {
 		this.fecha_reserva = fecha_reserva;
 	}
 	public int getCantidad_pasajeros_reservada() {
@@ -41,10 +41,10 @@ public class Reserva {
 	}
 	
 	
-	public Reserva(Date fecha_reserva, int cantidad_pasajeros_reservada, boolean reserva_cancelada, int id_viaje,
+	public Reserva(String fecha, int cantidad_pasajeros_reservada, boolean reserva_cancelada, int id_viaje,
 			int id_pasajero_reserva) {
 		super();
-		this.fecha_reserva = fecha_reserva;
+		this.fecha_reserva = fecha;
 		this.cantidad_pasajeros_reservada = cantidad_pasajeros_reservada;
 		this.reserva_cancelada = reserva_cancelada;
 		this.id_viaje = id_viaje;

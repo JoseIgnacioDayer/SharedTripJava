@@ -22,7 +22,7 @@ public class ReservaDAO {
 			while(rs.next()) {
 				Reserva r=new Reserva();
 				
-				r.setFecha_reserva(rs.getDate("fecha_reserva"));
+				r.setFecha_reserva(rs.getString("fecha_reserva"));
 				r.setCantidad_pasajeros_reservada(rs.getInt("cantidad_pasajeros_reservada"));
 				r.setReserva_cancelada(rs.getBoolean("reserva_cancelada"));
 				r.setId_viaje(rs.getInt("id_viaje"));
@@ -66,7 +66,7 @@ public class ReservaDAO {
 			rs=stmt.executeQuery();
 			if(rs!=null && rs.next()) {
 				r=new Reserva();
-				r.setFecha_reserva(rs.getDate("fecha_reserva"));
+				r.setFecha_reserva(rs.getString("fecha_reserva"));
 				r.setCantidad_pasajeros_reservada(rs.getInt("cantidad_pasajeros_reservada"));
 				r.setReserva_cancelada(rs.getBoolean("reserva_cancelada"));
 				r.setId_viaje(rs.getInt("id_viaje"));
@@ -99,7 +99,7 @@ public void add(Reserva r) {
 						"insert into reservas(fecha_reserva,cantidad_pasajeros_reservada,reserva_cancelada,id_viaje,id_pasajero_reserva) values(?,?,?,?,?)",
 						PreparedStatement.RETURN_GENERATED_KEYS
 						);
-		stmt.setDate(1, r.getFecha_reserva());
+		stmt.setString(1, r.getFecha_reserva());
 		stmt.setInt(2, r.getCantidad_pasajeros_reservada());
 		stmt.setBoolean(3, r.isReserva_cancelada());
 		stmt.setInt(4, r.getId_viaje());
@@ -163,7 +163,7 @@ public void delete(Reserva r) {
 		stmt=ConnectionDB.getInstancia().getConn().prepareStatement(
 				"delete * from reservas where fecha_reserva=?"
 				);
-		stmt.setDate(1, r.getFecha_reserva());
+		stmt.setString(1, r.getFecha_reserva());
 		int rowsAffected = stmt.executeUpdate();
 		
 		if(rowsAffected > 1) {

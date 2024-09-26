@@ -135,6 +135,36 @@ public void add(Viaje v) {
 	}
 }
 
+public void updateCantidad(int idViaje, int cantPasajeros) {
+PreparedStatement stmt = null;
+	
+	try {
+		stmt= ConnectionDB.getInstancia().getConn().prepareStatement(
+				"UPDATE viajes SET lugares_disponibles = ? where id_viaje = ? ");
+		
+		stmt.setInt(1, cantPasajeros);
+		stmt.setInt(2, idViaje);
+
+		
+		stmt.executeUpdate();
+		
+	}catch (SQLException e) {
+        e.printStackTrace();
+   
+    }finally {
+		try {
+			if(stmt!=null) {stmt.close();}
+			ConnectionDB.getInstancia().releaseConn();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+    }
+	
+}
+
+
+
+
 
 
 public void update(Viaje v, int id_viaje) {

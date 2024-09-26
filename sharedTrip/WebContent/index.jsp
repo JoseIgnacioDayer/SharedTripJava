@@ -12,6 +12,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 	
 </head>
+
     <div class="container-fluid p-0">
         <div class="row align-items-start" style="height: 10vh">
             <div class="col">
@@ -20,6 +21,20 @@
         </div>
         <div class="row align-items-center" style="height: 80vh">
             <div class="container">
+            
+            <% 
+			    String reservado = request.getParameter("reservado");
+			    if ("true".equals(reservado)) { 
+			%>
+			    <div class="alert alert-success" role="alert">
+			        ¡Reserva realizada con éxito!
+			    </div>
+			<% 
+			    } 
+			%>
+            
+            
+            
                 <h2 class="my-4">Lista de Viajes</h2>
                 <div class="row">
                     <%
@@ -35,6 +50,11 @@
                                 <p class="card-text">Origen: <%= viaje.getOrigen() %></p>
                                 <p class="card-text">Fecha: <%= viaje.getFecha() %></p>
                                 <p class="card-text">Lugares Disponibles: <%= viaje.getLugares_disponibles() %></p>
+                                <form action="reservar" method="post">
+                    				<input type="hidden" name="viajeId" value="<%= viaje.getIdViaje() %>">
+                    				<input type="number" name="cantPasajeros" min="1" max="<%= viaje.getLugares_disponibles()%>" value="1" required>
+                    				<button type="submit" class="btn btn-success">Reservar</button>
+                			</form>
                             </div>
                         </div>
                     </div>

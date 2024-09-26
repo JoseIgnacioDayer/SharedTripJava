@@ -18,6 +18,16 @@ public class ViajeController {
 		return viajeDAO.getAll();
 		
 	}
+	
+	public Viaje getOne(int id) {
+		return this.viajeDAO.getByViaje(id);
+	}
+	
+	public void actualizarCantidad(int idViaje, int cantidad) {
+		Viaje viaje = this.getOne(idViaje);
+		int nueva_cant = viaje.getLugares_disponibles()- cantidad;
+		this.viajeDAO.updateCantidad(idViaje, nueva_cant);
+	}
 
 
 }

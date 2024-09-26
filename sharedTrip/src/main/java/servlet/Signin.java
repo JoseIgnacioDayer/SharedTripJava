@@ -31,29 +31,21 @@ public class Signin extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		
-		Usuario u = new Usuario();
-		UserController ctrl = new UserController();
-		String usuario = request.getParameter("usuario");
-		String clave = request.getParameter("password");
-		u.setUsuario(usuario);
-		u.setClave(clave);
-		u = ctrl.validate(u);
-		
-		if(u==null) {
-			response.sendRedirect("index.jsp");
-		}else {
-			ViajeController ctrlViaje = new ViajeController();
-			LinkedList<Viaje> viajes = ctrlViaje.getAll();
-			
-			request.getSession().setAttribute("usuario", u);
-			request.setAttribute("viajes", viajes);
-			
-			request.getRequestDispatcher("WEB-INF/viajes.jsp").forward(request, response);
-			
-		}
-		
-
-		
+        Usuario u = new Usuario();
+        UserController ctrl = new UserController();
+        String usuario = request.getParameter("usuario");
+        String clave = request.getParameter("password");
+        
+        u.setUsuario(usuario);
+        u.setClave(clave);
+        u = ctrl.validate(u);
+        
+        if (u == null) {
+            request.setAttribute("errorMessage", "Usuario o contraseña incorrectos.");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+        } else {
+            request.getSession().setAttribute("usuario", u);
+            response.sendRedirect(request.getContextPath() +"/");
+        }
 	}
-
 }
