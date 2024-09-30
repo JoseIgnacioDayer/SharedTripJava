@@ -10,8 +10,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import data.ViajeDAO;
 import entidades.Usuario;
-
+import entidades.Viaje;
 import logic.ReservaController;
 import logic.ViajeController;
 
@@ -45,6 +46,8 @@ public class reservar extends HttpServlet {
 
         
         int viajeId = Integer.parseInt(request.getParameter("viajeId"));
+        ViajeDAO viajeDAO = new ViajeDAO();
+        Viaje viaje = viajeDAO.getByViaje(viajeId);
         int cantPasajeros = Integer.parseInt(request.getParameter("cantPasajeros"));
         
         Usuario user = (Usuario) request.getSession().getAttribute("usuario");
@@ -55,7 +58,7 @@ public class reservar extends HttpServlet {
         
         ViajeController viajeController = new ViajeController();
         ReservaController reservaController = new ReservaController();
-        reservaController.nuevaReserva(viajeId, cantPasajeros, idUsuario, fecha, reservaCancelada);
+        reservaController.nuevaReserva(viaje, cantPasajeros, idUsuario, fecha, reservaCancelada);
         
         viajeController.actualizarCantidad(viajeId, cantPasajeros);
 

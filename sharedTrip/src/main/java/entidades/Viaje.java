@@ -11,9 +11,15 @@ public class Viaje {
 	public boolean cancelado;
 	public String lugar_salida;
 	public String tiempo_cancelacion; //fijarse el tipo
-	public int id_conductor;
+	private Usuario conductor;
 	
 	
+	public Usuario getConductor() {
+		return conductor;
+	}
+	public void setConductor(Usuario conductor) {
+		this.conductor = conductor;
+	}
 	public int getIdViaje() {
 		return idViaje;
 	}
@@ -68,15 +74,12 @@ public class Viaje {
 	public void setTiempo_cancelacion(String tiempo_cancelacion) {
 		this.tiempo_cancelacion = tiempo_cancelacion;
 	}
-	public int getId_conductor() {
-		return id_conductor;
-	}
-	public void setId_conductor(int id_conductor) {
-		this.id_conductor = id_conductor;
-	}
+
+	
+
 	
 	public Viaje(int idViaje, Date fecha, int lugares_disponibles, String origen, String destino,
-			double precio_unitario, boolean cancelado, String lugar_salida, String tiempo_cancelacion, int id_conductor) {
+			double precio_unitario, boolean cancelado, String lugar_salida, String tiempo_cancelacion, Usuario conductor) {
 		super();
 		this.idViaje = idViaje;
 		this.fecha = fecha;
@@ -87,7 +90,7 @@ public class Viaje {
 		this.cancelado = cancelado;
 		this.lugar_salida = lugar_salida;
 		this.tiempo_cancelacion = tiempo_cancelacion;
-		this.id_conductor = id_conductor;
+		this.conductor = conductor;
 	}
 	public Viaje() {
 		// TODO Auto-generated constructor stub

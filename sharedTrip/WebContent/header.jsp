@@ -5,13 +5,41 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
+
+            <ul class="navbar-nav">
+                <% if(request.getSession().getAttribute("usuario") != null) { %>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="<%= request.getContextPath() %>/misViajes">Mis Viajes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="<%= request.getContextPath() %>/misReservas">Mis Reservas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="<%= request.getContextPath() %>/misVehiculos">Mis Vehículos</a>
+                    </li>
+                <% } %>
+            </ul>
+
             <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="register.jsp">Registrarse</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="login.jsp">Iniciar Sesión</a>
-                </li>
+                <% if(request.getSession().getAttribute("usuario") == null) { %>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="register.jsp">Registrarse</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="login.jsp">Iniciar Sesión</a>
+                    </li>
+                <% } else { %>
+                    <li class="nav-item">
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <%= request.getSession().getAttribute("nombre") + " " + request.getSession().getAttribute("apellido") %>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="<%= request.getContextPath() %>/CerrarSesion">Cerrar Sesión</a>
+                            </div>
+                        </div>
+                    </li>
+                <% } %>
             </ul>
         </div>
     </nav>

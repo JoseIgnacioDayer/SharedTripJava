@@ -25,9 +25,10 @@ public class ReservaDAO {
 				r.setFecha_reserva(rs.getString("fecha_reserva"));
 				r.setCantidad_pasajeros_reservada(rs.getInt("cantidad_pasajeros_reservada"));
 				r.setReserva_cancelada(rs.getBoolean("reserva_cancelada"));
-				r.setId_viaje(rs.getInt("id_viaje"));
 				r.setId_pasajero_reserva(rs.getInt("id_pasajero_reserva"));
-				
+				ViajeDAO viajeDAO = new ViajeDAO();
+				Viaje viaje = viajeDAO.getByViaje(rs.getInt("id_viaje"));
+				r.setViaje(viaje);
 				reservas.add(r);
 			}
 		}
@@ -59,19 +60,51 @@ public class ReservaDAO {
 		ResultSet rs=null;
 		try {
 			stmt=ConnectionDB.getInstancia().getConn().prepareStatement(
-					"select fecha_reserva,cantidad_pasajeros_reservada,reserva_cancelada,id_viaje,id_pasajero_reserva from reservas where id_pasajero_reserva=?"
-					); 
+				"SELECT fecha_reserva, cantidad_pasajeros_reservada, reserva_cancelada, " 
+				+ "v.id_viaje, v.origen, v.destino, v.fecha, v.lugares_disponibles, v.precio_unitario, "
+				+ "r.id_pasajero_reserva, u.* FROM reservas r "
+				+ "INNER JOIN viajes v ON r.id_viaje = v.id_viaje "
+				+ "INNER JOIN usuarios u "
+				+ "ON u.id_usuario = v.id_conductor "
+				+ "WHERE r.id_pasajero_reserva = ? "
+				+ "AND reserva_cancelada = false"
+				); 
 			stmt.setInt(1, u.getIdUsuario());
 			
 			rs=stmt.executeQuery();
-			if(rs!=null && rs.next()) {
+			while(rs!=null && rs.next()) {
+				
+	            
+	            Usuario conductor = new Usuario();
+	            conductor.setIdUsuario(rs.getInt("id_usuario"));
+	            conductor.setNombre(rs.getString("nombre"));
+	            conductor.setApellido(rs.getString("apellido"));
+	            conductor.setCorreo(rs.getString("correo"));
+	            conductor.setTelefono(rs.getString("telefono"));
+	            
+	            
+	            Viaje viaje = new Viaje();
+	            viaje.setIdViaje(rs.getInt("id_viaje"));
+	            viaje.setOrigen(rs.getString("origen"));
+	            viaje.setDestino(rs.getString("destino"));
+	            viaje.setFecha(rs.getDate("fecha"));
+	            viaje.setLugares_disponibles(rs.getInt("lugares_disponibles"));
+	            viaje.setPrecio_unitario(rs.getDouble("precio_unitario"));
+	            viaje.setConductor(conductor);
+				
+				
+				
 				r=new Reserva();
 				r.setFecha_reserva(rs.getString("fecha_reserva"));
 				r.setCantidad_pasajeros_reservada(rs.getInt("cantidad_pasajeros_reservada"));
 				r.setReserva_cancelada(rs.getBoolean("reserva_cancelada"));
-				r.setId_viaje(rs.getInt("id_viaje"));
-				r.setId_pasajero_reserva(rs.getInt("id_pasajero_reserva"));
 				
+				r.setId_pasajero_reserva(rs.getInt("id_pasajero_reserva"));
+				r.setViaje(viaje);
+				
+				
+				rvas.add(r);
+
 			}
 		} catch (SQLException e) {
 			e.printStackTrace(); 
@@ -102,7 +135,8 @@ public void add(Reserva r) {
 		stmt.setString(1, r.getFecha_reserva());
 		stmt.setInt(2, r.getCantidad_pasajeros_reservada());
 		stmt.setBoolean(3, r.isReserva_cancelada());
-		stmt.setInt(4, r.getId_viaje());
+		
+		stmt.setInt(4, r.getViaje().getIdViaje());
 		stmt.setInt(5, r.getId_pasajero_reserva());
 	
 
@@ -134,7 +168,7 @@ public void update(Reserva r, Date fDate) {
 		
 		stmt.setInt(1, r.getCantidad_pasajeros_reservada());
 		stmt.setBoolean(2, r.isReserva_cancelada());
-		stmt.setInt(3, r.getId_viaje());
+		stmt.setInt(3, r.getViaje().getIdViaje());
 		stmt.setInt(4, r.getId_pasajero_reserva());
 		stmt.setDate(5, fDate);
 
@@ -153,6 +187,35 @@ public void update(Reserva r, Date fDate) {
 		}
     }
 }
+
+public boolean cancelarReserva(int id_viaje, int id_usuario) {
+	 	PreparedStatement stmt = null;
+	    boolean cancelada = false;
+
+	    try {
+	        stmt = ConnectionDB.getInstancia().getConn().prepareStatement(
+	            "UPDATE reservas SET reserva_cancelada = true WHERE id_viaje = ? AND id_pasajero_reserva = ?"
+	        );
+	        stmt.setInt(1, id_viaje);
+	        stmt.setInt(2, id_usuario);
+
+	        int rowsAffected = stmt.executeUpdate();
+	        cancelada = (rowsAffected > 0); 
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        try {
+	            if (stmt != null) { stmt.close(); }
+	            ConnectionDB.getInstancia().releaseConn();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
+
+	    return cancelada;
+}
+	
+
 
 
 

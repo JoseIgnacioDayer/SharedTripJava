@@ -3,6 +3,7 @@ package data;
 import java.sql.*;
 import java.util.LinkedList;
 
+import entidades.Usuario;
 import entidades.Viaje;
 
 public class ViajeDAO {
@@ -30,8 +31,10 @@ public class ViajeDAO {
 				v.setPrecio_unitario(rs.getDouble("precio_unitario"));
 				v.setCancelado(rs.getBoolean("cancelado"));
 				v.setTiempo_cancelacion(rs.getString("tiempo_cancelacion"));
-				v.setId_conductor(rs.getInt("id_conductor"));
 				v.setLugar_salida(rs.getString("lugar_salida"));
+				UserDAO usuarioDAO = new UserDAO();
+				Usuario conductor = usuarioDAO.getById(rs.getInt("id_conductor"));
+				v.setConductor(conductor);
 				
 				
 				viajes.add(v);
@@ -79,8 +82,12 @@ public Viaje getByViaje(int id_viaje) {
 			v.setPrecio_unitario(rs.getDouble("precio_unitario"));
 			v.setCancelado(rs.getBoolean("cancelado"));
 			v.setTiempo_cancelacion(rs.getString("tiempo_cancelacion"));
-			v.setId_conductor(rs.getInt("id_conductor"));
 			v.setLugar_salida(rs.getString("lugar_salida"));
+			
+			UserDAO usuarioDAO = new UserDAO();
+			Usuario conductor = usuarioDAO.getById(rs.getInt("id_conductor"));
+			v.setConductor(conductor);
+			
 		}
 	} catch (SQLException e) {
 		e.printStackTrace(); 
@@ -115,7 +122,7 @@ public void add(Viaje v) {
 		stmt.setDouble(6, v.getPrecio_unitario());
 		stmt.setBoolean(7, v.isCancelado());
 		stmt.setString(8, v.getTiempo_cancelacion());
-		stmt.setInt(9, v.getId_conductor());
+		stmt.setInt(9, v.getConductor().getIdUsuario());
 		stmt.setString(10, v.getLugar_salida());
 	
 		stmt.executeUpdate();
@@ -182,7 +189,7 @@ public void update(Viaje v, int id_viaje) {
 		stmt.setDouble(6, v.getPrecio_unitario());
 		stmt.setBoolean(7, v.isCancelado());
 		stmt.setString(8, v.getTiempo_cancelacion());
-		stmt.setInt(9, v.getId_conductor());
+		stmt.setInt(9, v.getConductor().getIdUsuario());
 		stmt.setString(10, v.getLugar_salida());
 
 		

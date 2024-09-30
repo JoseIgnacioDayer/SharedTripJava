@@ -45,6 +45,9 @@ public class Signin extends HttpServlet {
             request.getRequestDispatcher("login.jsp").forward(request, response);
         } else {
             request.getSession().setAttribute("usuario", u);
+            request.getSession().setAttribute("nombre", u.getNombre());
+            request.getSession().setAttribute("apellido", u.getApellido());
+            
             response.sendRedirect(request.getContextPath() +"/");
         }
 	}
