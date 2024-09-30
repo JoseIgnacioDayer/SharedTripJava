@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import data.ReservaDAO;
 import entidades.Reserva;
 import entidades.Usuario;
+import logic.ReservaController;
 
 
 @WebServlet("/misReservas")
@@ -25,10 +26,11 @@ public class ListadoReservasUsuario extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		ReservaDAO reservaDAO = new ReservaDAO();
+		
+		ReservaController reservaCtrl = new ReservaController();
 		Usuario usuario = (Usuario)request.getSession().getAttribute("usuario");
-		LinkedList<Reserva> reservas = reservaDAO.getByUser(usuario);
-		System.out.println("Total de reservas encontradas: " + reservas.size());
+		LinkedList<Reserva> reservas = reservaCtrl.getReservasUsuario(usuario);
+	
 		request.getSession().setAttribute("misreservas", reservas);
 		request.getRequestDispatcher("misReservas.jsp").forward(request, response);
 	}

@@ -8,25 +8,25 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import data.ReservaDAO;
-import data.ViajeDAO;
 import entidades.Reserva;
 import entidades.Usuario;
 import entidades.Viaje;
+import logic.ReservaController;
 import logic.ViajeController;
 
 /**
- * Servlet implementation class ListadoViajesUsuario
+ * Servlet implementation class CancelarViaje
  */
-@WebServlet("/misViajes")
-public class ListadoViajesUsuario extends HttpServlet {
+@WebServlet("/cancelarViaje")
+public class CancelarViaje extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ListadoViajesUsuario() {
+    public CancelarViaje() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -35,19 +35,29 @@ public class ListadoViajesUsuario extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		ViajeController viajeCtrl = new ViajeController();
-		Usuario usuario = (Usuario)request.getSession().getAttribute("usuario");
-		LinkedList<Viaje> viajes = viajeCtrl.getViajesUsuario(usuario);
-		request.getSession().setAttribute("misviajes", viajes);
-		request.getRequestDispatcher("misViajes.jsp").forward(request, response);
+		// TODO Auto-generated method stub
+		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+		HttpSession session = request.getSession();
+		int idViaje = Integer.parseInt(request.getParameter("viajeId"));
+		Usuario u = (Usuario) session.getAttribute("usuario");
+		ViajeController viajeCtrl = new ViajeController();
+		boolean cancelada = viajeCtrl.cancelar(idViaje,u.getIdUsuario());
+		if (cancelada) {
+           
+            LinkedList<Viaje> viajes = viajeCtrl.getViajesUsuario(u);
+            session.setAttribute("misviajes", viajes);
+            
+            session.setAttribute("mensaje", "Viaje cancelado con éxito.");
+        } else {
+            session.setAttribute("mensaje", "Error al cancelar el viaje.");
+        }
+		response.sendRedirect("misViajes.jsp");
 	}
 
 }

@@ -2,9 +2,11 @@ package logic;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedList;
 
 import data.ReservaDAO;
 import entidades.Reserva;
+import entidades.Usuario;
 import entidades.Viaje;
 
 public class ReservaController {
@@ -21,5 +23,15 @@ public class ReservaController {
 		Reserva r = new Reserva(fechaString, cantPasajeros, cancelado, viaje, idUsuario);
 		
 		this.reservaDAO.add(r);
+	}
+	
+	public LinkedList<Reserva> getReservasUsuario(Usuario u){
+		LinkedList<Reserva> reservas = this.reservaDAO.getByUser(u);
+		return reservas;
+	}
+	
+	
+	public boolean cancelar(int idViaje, int idUsuario) {
+		return this.reservaDAO.cancelarReserva(idViaje, idUsuario);
 	}
 }

@@ -44,10 +44,13 @@ public class reservar extends HttpServlet {
             return;
         }
 
+        ViajeController viajeCtrl = new ViajeController();
+        ReservaController reservaController = new ReservaController();
         
         int viajeId = Integer.parseInt(request.getParameter("viajeId"));
-        ViajeDAO viajeDAO = new ViajeDAO();
-        Viaje viaje = viajeDAO.getByViaje(viajeId);
+        
+        Viaje viaje = viajeCtrl.getOne(viajeId);
+        
         int cantPasajeros = Integer.parseInt(request.getParameter("cantPasajeros"));
         
         Usuario user = (Usuario) request.getSession().getAttribute("usuario");
@@ -56,11 +59,9 @@ public class reservar extends HttpServlet {
         Date fecha = new Date();
         boolean reservaCancelada = false;
         
-        ViajeController viajeController = new ViajeController();
-        ReservaController reservaController = new ReservaController();
         reservaController.nuevaReserva(viaje, cantPasajeros, idUsuario, fecha, reservaCancelada);
         
-        viajeController.actualizarCantidad(viajeId, cantPasajeros);
+        viajeCtrl.actualizarCantidad(viajeId, cantPasajeros);
 
         response.sendRedirect(request.getContextPath()+"/?reservado=true");
 		

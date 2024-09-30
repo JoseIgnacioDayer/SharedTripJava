@@ -7,10 +7,23 @@
 
 
 
-    <welcome-file-list>
-        <welcome-file>index.jsp</welcome-file>
-    </welcome-file-list>
 
+
+    <servlet>
+        <servlet-name>ViajesListado</servlet-name>
+        <servlet-class>servlet.ViajesListado</servlet-class>
+    </servlet>
+
+    <!-- Mapeo del Servlet -->
+    <servlet-mapping>
+        <servlet-name>ViajesListado</servlet-name>
+        <url-pattern>/o</url-pattern>
+    </servlet-mapping>
+
+    <!-- Página de bienvenida: El Servlet ViajesListado actúa como punto de entrada -->
+    <welcome-file-list>
+        <welcome-file>ViajesListado</welcome-file>
+    </welcome-file-list>
 
 
 </web-app>

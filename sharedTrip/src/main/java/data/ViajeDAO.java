@@ -3,6 +3,7 @@ package data;
 import java.sql.*;
 import java.util.LinkedList;
 
+import entidades.Reserva;
 import entidades.Usuario;
 import entidades.Viaje;
 
@@ -30,7 +31,6 @@ public class ViajeDAO {
 				v.setDestino(rs.getString("destino"));
 				v.setPrecio_unitario(rs.getDouble("precio_unitario"));
 				v.setCancelado(rs.getBoolean("cancelado"));
-				v.setTiempo_cancelacion(rs.getString("tiempo_cancelacion"));
 				v.setLugar_salida(rs.getString("lugar_salida"));
 				UserDAO usuarioDAO = new UserDAO();
 				Usuario conductor = usuarioDAO.getById(rs.getInt("id_conductor"));
@@ -66,7 +66,7 @@ public Viaje getByViaje(int id_viaje) {
 	ResultSet rs=null;
 	try {
 		stmt=ConnectionDB.getInstancia().getConn().prepareStatement(
-				"select id_viaje,fecha, lugares_disponibles, origen, destino,precio_unitario, cancelado,tiempo_cancelacion, id_conductor, lugar_salida from viajes where id_viaje=?"
+				"select id_viaje,fecha, lugares_disponibles, origen, destino,precio_unitario, cancelado, id_conductor, lugar_salida from viajes where id_viaje=?"
 				); 
 		stmt.setInt(1, id_viaje);
 		
@@ -81,7 +81,6 @@ public Viaje getByViaje(int id_viaje) {
 			v.setDestino(rs.getString("destino"));
 			v.setPrecio_unitario(rs.getDouble("precio_unitario"));
 			v.setCancelado(rs.getBoolean("cancelado"));
-			v.setTiempo_cancelacion(rs.getString("tiempo_cancelacion"));
 			v.setLugar_salida(rs.getString("lugar_salida"));
 			
 			UserDAO usuarioDAO = new UserDAO();
@@ -104,6 +103,53 @@ public Viaje getByViaje(int id_viaje) {
 	return v;
 }
 
+public LinkedList<Viaje> getByUser(Usuario u) {
+	
+	LinkedList<Viaje> viajes = new LinkedList<>();
+	
+	
+	PreparedStatement stmt=null;
+	ResultSet rs=null;
+	try {
+		stmt=ConnectionDB.getInstancia().getConn().prepareStatement(
+			"SELECT id_viaje, fecha, lugares_disponibles, origen, destino, precio_unitario, cancelado, id_conductor, lugar_salida "
+			+ "FROM viajes "
+			+ "WHERE id_conductor = ? "
+			); 
+		stmt.setInt(1, u.getIdUsuario());
+		
+		rs=stmt.executeQuery();
+		while(rs!=null && rs.next()) {
+			
+
+            
+            Viaje viaje = new Viaje();
+            viaje.setIdViaje(rs.getInt("id_viaje"));
+            viaje.setOrigen(rs.getString("origen"));
+            viaje.setDestino(rs.getString("destino"));
+            viaje.setFecha(rs.getDate("fecha"));
+            viaje.setLugares_disponibles(rs.getInt("lugares_disponibles"));
+            viaje.setPrecio_unitario(rs.getDouble("precio_unitario"));
+            viaje.setCancelado(rs.getBoolean("cancelado"));
+            viaje.setLugar_salida(rs.getString("lugar_salida"));
+            
+            viajes.add(viaje);
+		}
+	} catch (SQLException e) {
+		e.printStackTrace(); 
+	}finally {
+		try {
+			if(rs!=null) {rs.close();}
+			if(stmt!=null) {stmt.close();}
+			ConnectionDB.getInstancia().releaseConn();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	return viajes;
+}
+
 
 public void add(Viaje v) {
 	PreparedStatement stmt= null;
@@ -111,7 +157,7 @@ public void add(Viaje v) {
 	try {
 		stmt=ConnectionDB.getInstancia().getConn().
 				prepareStatement(
-						"insert into viajes(id_viaje,fecha, lugares_disponibles, origen, destino,precio_unitario, cancelado,tiempo_cancelacion, id_conductor, lugar_salida) values(?,?,?,?,?,?,?,?,?,?)",
+						"insert into viajes(id_viaje,fecha, lugares_disponibles, origen, destino,precio_unitario, cancelado, id_conductor, lugar_salida) values(?,?,?,?,?,?,?,?,?)",
 						PreparedStatement.RETURN_GENERATED_KEYS
 						);
 		stmt.setInt(1, v.getIdViaje());
@@ -121,9 +167,9 @@ public void add(Viaje v) {
 		stmt.setString(5, v.getDestino());
 		stmt.setDouble(6, v.getPrecio_unitario());
 		stmt.setBoolean(7, v.isCancelado());
-		stmt.setString(8, v.getTiempo_cancelacion());
-		stmt.setInt(9, v.getConductor().getIdUsuario());
-		stmt.setString(10, v.getLugar_salida());
+		
+		stmt.setInt(8, v.getConductor().getIdUsuario());
+		stmt.setString(9, v.getLugar_salida());
 	
 		stmt.executeUpdate();
 		
@@ -170,6 +216,33 @@ PreparedStatement stmt = null;
 }
 
 
+public boolean cancelarViaje(int id_viaje, int id_usuario) {
+	 	PreparedStatement stmt = null;
+	    boolean cancelada = false;
+
+	    try {
+	        stmt = ConnectionDB.getInstancia().getConn().prepareStatement(
+	            "UPDATE viajes SET cancelado = true WHERE id_viaje = ? AND id_conductor = ?"
+	        );
+	        stmt.setInt(1, id_viaje);
+	        stmt.setInt(2, id_usuario);
+
+	        int rowsAffected = stmt.executeUpdate();
+	        cancelada = (rowsAffected > 0); 
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        try {
+	            if (stmt != null) { stmt.close(); }
+	            ConnectionDB.getInstancia().releaseConn();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
+
+	    return cancelada;
+}
+	
 
 
 
@@ -179,7 +252,7 @@ public void update(Viaje v, int id_viaje) {
 	
 	try {
 		stmt= ConnectionDB.getInstancia().getConn().prepareStatement(
-				"UPDATE viajes SET (fecha = ? , lugares_disponibles =?, origen =?, destino =?, precio_unitario =?, cancelado =?, tiempo_cancelacion =?, id_conductor =?, lugar_salida =?) where id_viaje = ? ");
+				"UPDATE viajes SET (fecha = ? , lugares_disponibles =?, origen =?, destino =?, precio_unitario =?, cancelado =?, id_conductor =?, lugar_salida =?) where id_viaje = ? ");
 		
 		stmt.setInt(1, id_viaje);
 		stmt.setDate(2, v.getFecha());
@@ -188,9 +261,8 @@ public void update(Viaje v, int id_viaje) {
 		stmt.setString(5, v.getDestino());
 		stmt.setDouble(6, v.getPrecio_unitario());
 		stmt.setBoolean(7, v.isCancelado());
-		stmt.setString(8, v.getTiempo_cancelacion());
-		stmt.setInt(9, v.getConductor().getIdUsuario());
-		stmt.setString(10, v.getLugar_salida());
+		stmt.setInt(8, v.getConductor().getIdUsuario());
+		stmt.setString(9, v.getLugar_salida());
 
 		
 		stmt.executeUpdate();

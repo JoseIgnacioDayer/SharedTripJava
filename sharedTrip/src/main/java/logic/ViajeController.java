@@ -28,6 +28,16 @@ public class ViajeController {
 		int nueva_cant = viaje.getLugares_disponibles()- cantidad;
 		this.viajeDAO.updateCantidad(idViaje, nueva_cant);
 	}
-
+	
+	
+	public LinkedList<Viaje> getViajesUsuario(Usuario u){
+		return this.viajeDAO.getByUser(u);
+		
+	}
+	
+	public boolean cancelar(int idViaje, int idUsuario) {
+		return this.viajeDAO.cancelarViaje(idViaje, idUsuario);
+		
+	}
 
 }

@@ -51,7 +51,7 @@ public class ReservaDAO {
 	
 	return reservas;}
 
-	public LinkedList<Reserva> getByUser(Usuario u) {
+public LinkedList<Reserva> getByUser(Usuario u) {
 		
 		LinkedList<Reserva> rvas = new LinkedList<>();
 		

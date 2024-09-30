@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import data.ReservaDAO;
 import entidades.Reserva;
 import entidades.Usuario;
+import logic.ReservaController;
 
 /**
  * Servlet implementation class CancelarReserva
@@ -44,12 +45,11 @@ public class CancelarReserva extends HttpServlet {
 		HttpSession session = request.getSession();
 		int idViaje = Integer.parseInt(request.getParameter("viajeId"));
 		Usuario u = (Usuario) session.getAttribute("usuario");
-		ReservaDAO reservaDAO = new ReservaDAO();
-		boolean cancelada = reservaDAO.cancelarReserva(idViaje, u.getIdUsuario());
+		ReservaController reservaCtrl = new ReservaController();
+		boolean cancelada = reservaCtrl.cancelar(idViaje,u.getIdUsuario());
 		if (cancelada) {
-            
-            Usuario usuario = (Usuario) session.getAttribute("usuario");
-            LinkedList<Reserva> misReservas = reservaDAO.getByUser(usuario);
+          
+            LinkedList<Reserva> misReservas = reservaCtrl.getReservasUsuario(u);
             session.setAttribute("misreservas", misReservas);
             
             session.setAttribute("mensaje", "Reserva cancelada con éxito.");
