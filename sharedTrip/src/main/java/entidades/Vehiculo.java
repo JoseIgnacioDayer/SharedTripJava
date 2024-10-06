@@ -1,17 +1,27 @@
 package entidades;
 
 public class Vehiculo {
-	private int patente;
+	private int id_vehiculo;
+	public String patente;
 	public String modelo;
 	public int anio;
 	public int usuario_duenio_id;
 	
-	public int getPatente() {
+	
+	public int getId_vehiculo() {
+		return id_vehiculo;
+	}
+	public void setId_vehiculo(int id_vehiculo) {
+		this.id_vehiculo = id_vehiculo;
+	}
+	
+	public String getPatente() {
 		return patente;
 	}
-	public void setPatente(int patente) {
+	public void setPatente(String patente) {
 		this.patente = patente;
 	}
+	
 	public String getModelo() {
 		return modelo;
 	}
@@ -35,12 +45,14 @@ public class Vehiculo {
 		
 	}
 	
-	public Vehiculo(int patente, String modelo, int anio, int usuario_duenio_id) {
+	public Vehiculo(int id_vehiculo, String patente , String modelo, int anio, int usuario_duenio_id) {
 		super();
+		this.id_vehiculo = id_vehiculo;
 		this.patente = patente;
 		this.modelo = modelo;
 		this.anio = anio;
 		this.usuario_duenio_id = usuario_duenio_id;
+		
 	}
 	
 }

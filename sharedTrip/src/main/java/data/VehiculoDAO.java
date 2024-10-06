@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedList;
 
+import entidades.Usuario;
 import entidades.Vehiculo;
 
 public class VehiculoDAO {
@@ -18,13 +19,14 @@ public class VehiculoDAO {
 	
 	try {
 		stmt= ConnectionDB.getInstancia().getConn().createStatement();
-		rs= stmt.executeQuery("select patente,modelo, anio, usuario_duenio_id from vehiculos");
+		rs= stmt.executeQuery("select id_vehiculo,patente,modelo, anio, usuario_duenio_id from vehiculos");
 		
 		if(rs!=null) {
 			while(rs.next()) {
 				Vehiculo v=new Vehiculo();
 				
-				v.setPatente(rs.getInt("patente"));
+				v.setId_vehiculo(rs.getInt("id_vehiculo"));
+				v.setPatente(rs.getString("patente"));
 				v.setModelo(rs.getString("modelo"));
 				v.setAnio(rs.getInt("anio"));
 				v.setUsuario_duenio_id(rs.getInt("usuario_duenio_id"));
@@ -50,23 +52,25 @@ public class VehiculoDAO {
 		}
 	}
 	
-	return vehiculos;}
+	return vehiculos;
+	}
 
-public Vehiculo getByPatente(int patente) {
+public Vehiculo getById_vehiculo(int id_vehiculo) {
 
 	Vehiculo v=null;
 	PreparedStatement stmt=null;
 	ResultSet rs=null;
 	try {
 		stmt=ConnectionDB.getInstancia().getConn().prepareStatement(
-				"select patente,modelo, anio, usuario_duenio_id from vehiculos where patente=?"
+				"select id_vehiculo, patente, modelo, anio, usuario_duenio_id from vehiculos where id_vehiculo=?"
 				); 
-		stmt.setInt(1, patente);
+		stmt.setInt(1, id_vehiculo);
 		
 		rs=stmt.executeQuery();
 		if(rs!=null && rs.next()) {
-			v=new Vehiculo();
-				v.setPatente(rs.getInt("patente"));
+			v=new Vehiculo();	
+				v.setId_vehiculo(rs.getInt("id_vehiculo"));
+				v.setPatente(rs.getString("patente"));
 				v.setModelo(rs.getString("modelo"));
 				v.setAnio(rs.getInt("anio"));
 				v.setUsuario_duenio_id(rs.getInt("usuario_duenio_id"));
@@ -86,26 +90,65 @@ public Vehiculo getByPatente(int patente) {
 	return v;
 }
 
+public Vehiculo getByPatente(String patente) {
+
+	Vehiculo v=null;
+	PreparedStatement stmt=null;
+	ResultSet rs=null;
+	try {
+		stmt=ConnectionDB.getInstancia().getConn().prepareStatement(
+				"select id_vehiculo, patente,modelo, anio, usuario_duenio_id from vehiculos where patente=? "
+				); 
+		stmt.setString(2, patente);
+		
+		rs=stmt.executeQuery();
+		if(rs!=null && rs.next()) {
+			v=new Vehiculo();	
+				v.setId_vehiculo(rs.getInt("id_vehiculo"));
+				v.setPatente(rs.getString("patente"));
+				v.setModelo(rs.getString("modelo"));
+				v.setAnio(rs.getInt("anio"));
+				v.setUsuario_duenio_id(rs.getInt("usuario_duenio_id"));
+				
+		}
+	} catch (SQLException e) {
+		e.printStackTrace(); 
+	}finally {
+		try {
+			if(rs!=null) {rs.close();}
+			if(stmt!=null) {stmt.close();}
+			ConnectionDB.getInstancia().releaseConn();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	return v;
+}
 
 
-public void add(Vehiculo v) {
+public void altaVehiculo(Vehiculo v) {
 	PreparedStatement stmt= null;
 	ResultSet keyResultSet=null;
 	try {
 		stmt=ConnectionDB.getInstancia().getConn().
 				prepareStatement(
-						"insert into vehiculos(patente, modelo, anio, usuario_duenio_id) values(?,?,?,?,?,?)",
+						"insert into vehiculos(patente, modelo, anio, usuario_duenio_id) values(?,?,?,?)",
 						PreparedStatement.RETURN_GENERATED_KEYS
 						);
-		stmt.setInt(1, v.getPatente());
+		stmt.setString(1, v.getPatente());
 		stmt.setString(2, v.getModelo());
 		stmt.setInt(3, v.getAnio());
 		stmt.setInt(4, v.getUsuario_duenio_id());
+		
 	
 
 		stmt.executeUpdate();
 		
 		keyResultSet=stmt.getGeneratedKeys();
+		if(keyResultSet!=null && keyResultSet.next()){
+            v.setId_vehiculo(keyResultSet.getInt(1));
+        }
 		
 	}  catch (SQLException e) {
         e.printStackTrace();
@@ -122,17 +165,18 @@ public void add(Vehiculo v) {
 
 
 
-public void update(Vehiculo v, int patente) {
+public void update(Vehiculo v, int id_vehiculo) {
 	PreparedStatement stmt = null;
 	
 	try {
 		stmt= ConnectionDB.getInstancia().getConn().prepareStatement(
-				"UPDATE vehiculos SET (modelo = ?, anio = ? , usuario_duenio_id =?) where patente = ? ");
+				"update vehiculos set (patente = ?, modelo = ?, anio = ? , usuario_duenio_id =?) where id_vehiculo = ? ");
 		
-		stmt.setString(1, v.getModelo());
-		stmt.setInt(2, v.getAnio());
-		stmt.setInt(3, v.getUsuario_duenio_id());
-		stmt.setInt(4, patente);
+		stmt.setString(1, v.getPatente());
+		stmt.setString(2, v.getModelo());
+		stmt.setInt(3, v.getAnio());
+		stmt.setInt(4, v.getUsuario_duenio_id());
+		stmt.setInt(5, id_vehiculo);
 
 		
 		stmt.executeUpdate();
@@ -150,16 +194,58 @@ public void update(Vehiculo v, int patente) {
     }
 }
 
+public LinkedList<Vehiculo> getByUser(Usuario u) {
+	
+	LinkedList<Vehiculo> vehiculos = new LinkedList<>();
+	
+	
+	PreparedStatement stmt=null;
+	ResultSet rs=null;
+	try {
+		stmt=ConnectionDB.getInstancia().getConn().prepareStatement(
+			"SELECT id_vehiculo, patente, modelo, anio "
+			+ "FROM vehiculos "
+			+ "WHERE usuario_duenio_id = ?"
+			); 
+		stmt.setInt(1, u.getIdUsuario());
+		
+		rs=stmt.executeQuery();
+		while(rs!=null && rs.next()) {
+			
 
+            
+            Vehiculo vehiculo = new Vehiculo();
+            vehiculo.setId_vehiculo(rs.getInt("id_vehiculo"));
+            vehiculo.setPatente(rs.getString("patente"));
+            vehiculo.setModelo(rs.getString("modelo"));
+            vehiculo.setAnio(rs.getInt("anio"));
+           
+            
+            vehiculos.add(vehiculo);
+		}
+	} catch (SQLException e) {
+		e.printStackTrace(); 
+	}finally {
+		try {
+			if(rs!=null) {rs.close();}
+			if(stmt!=null) {stmt.close();}
+			ConnectionDB.getInstancia().releaseConn();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	return vehiculos;
+}
 
 public void delete(Vehiculo v) {
 	
 	PreparedStatement stmt=null;
 	try {
 		stmt=ConnectionDB.getInstancia().getConn().prepareStatement(
-				"delete * from vehiculos where patente=?"
+				"delete * from vehiculos where id_vehiculo=?"
 				);
-		stmt.setInt(1, v.getPatente());
+		stmt.setInt(1, v.getId_vehiculo());
 		int rowsAffected = stmt.executeUpdate();
 		
 		if(rowsAffected > 1) {
@@ -180,6 +266,31 @@ public void delete(Vehiculo v) {
 	}	
 }
 	
-	
+public boolean eliminarVehiculo(int id_vehiculo) {
+ 	PreparedStatement stmt = null;
+
+    try {
+        stmt = ConnectionDB.getInstancia().getConn().prepareStatement(
+            "delete from vehiculos where id_vehiculo = ?"
+        );
+        stmt.setInt(1, id_vehiculo);
+
+        int rowsAffected = stmt.executeUpdate();
+        return rowsAffected > 0;  
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false;
+    } finally {
+        try {
+            if (stmt != null) { stmt.close(); }
+            ConnectionDB.getInstancia().releaseConn();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false; 
+        }
+    }
+
+    
+}	
 	
 }

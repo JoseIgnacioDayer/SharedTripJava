@@ -1,7 +1,7 @@
 package servlet;
 
 import java.io.IOException;
-import java.util.LinkedList;
+
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,18 +13,17 @@ import entidades.Usuario;
 import entidades.Vehiculo;
 import logic.VehiculoController;
 
-
 /**
- * Servlet implementation class ListadoVehiculosUsuario
+ * Servlet implementation class AltaVehiculo
  */
-@WebServlet("/misVehiculos")
-public class ListadoVehiculosUsuario extends HttpServlet {
+@WebServlet({ "/AltaVehiculo", "/altaVehiculo" })
+public class AltaVehiculo extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ListadoVehiculosUsuario() {
+    public AltaVehiculo() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -33,11 +32,8 @@ public class ListadoVehiculosUsuario extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		VehiculoController vehiculoCtrl = new VehiculoController();
-		Usuario usuario = (Usuario)request.getSession().getAttribute("usuario");
-		LinkedList<Vehiculo> vehiculos = vehiculoCtrl.getVehiculosUsuario(usuario);
-		request.getSession().setAttribute("misvehiculos", vehiculos);
-		request.getRequestDispatcher("misVehiculos.jsp").forward(request, response);
+		// TODO Auto-generated method stub
+		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
 	/**
@@ -45,7 +41,22 @@ public class ListadoVehiculosUsuario extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		doGet(request, response);
+		Usuario usuario = (Usuario)request.getSession().getAttribute("usuario");		
+		Vehiculo v = new Vehiculo();
+		VehiculoController vehiculoCtrl = new VehiculoController();
+		
+		v.setPatente(request.getParameter("patente"));
+		v.setModelo(request.getParameter("modelo"));
+		
+		int anio = Integer.parseInt(request.getParameter("anio"));
+        v.setAnio(anio);
+        
+        v.setUsuario_duenio_id(usuario.getIdUsuario());
+	       
+		vehiculoCtrl.altaVehiculo(v);
+		response.sendRedirect("misVehiculos");
+		
+		
 	}
 
 }
