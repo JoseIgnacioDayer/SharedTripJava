@@ -2,7 +2,7 @@ package entidades;
 
 
 public class Reserva {
-	
+	private int idReserva;
 	private String fecha_reserva;
 	private int cantidad_pasajeros_reservada;
 	private boolean reserva_cancelada;
@@ -12,6 +12,12 @@ public class Reserva {
 	
 	
 
+	public int getIdReserva() {
+		return idReserva;
+	}
+	public void setIdReserva(int idReserva) {
+		this.idReserva = idReserva;
+	}
 	public String getFecha_reserva() {
 		return fecha_reserva;
 	}

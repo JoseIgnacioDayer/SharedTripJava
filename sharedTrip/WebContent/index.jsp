@@ -32,6 +32,19 @@
 			<% 
 			    } 
 			%>
+
+			<% 
+	        	String mensaje = (String) session.getAttribute("mensaje");
+	        	if (mensaje != null) {
+    		%>
+	        	<div class="alert alert-info">
+	            	<%= mensaje %>
+	        	</div>
+    		<%
+	            session.removeAttribute("mensaje");
+	        	}
+   			 %>
+			
                 <h2 class="my-4">Lista de Viajes</h2>
                 <div class="row">
                     <%

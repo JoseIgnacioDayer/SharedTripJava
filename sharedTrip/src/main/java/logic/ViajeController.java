@@ -25,7 +25,7 @@ public class ViajeController {
 	
 	public void actualizarCantidad(int idViaje, int cantidad) {
 		Viaje viaje = this.getOne(idViaje);
-		int nueva_cant = viaje.getLugares_disponibles()- cantidad;
+		int nueva_cant = viaje.getLugares_disponibles() - (cantidad);
 		this.viajeDAO.updateCantidad(idViaje, nueva_cant);
 	}
 	

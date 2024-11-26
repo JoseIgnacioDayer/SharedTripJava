@@ -11,11 +11,13 @@ public class UserDAO {
 		
 		Statement stmt=null;
 		ResultSet rs=null;
+		
 		LinkedList<Usuario> users= new LinkedList<>();
 		
 		try {
 			stmt= ConnectionDB.getInstancia().getConn().createStatement();
-			rs= stmt.executeQuery("select id_usuario,usuario,nombre,apellido,correo,telefono from usuarios");
+			rs= stmt.executeQuery("select id_usuario,usuario,nombre,apellido,correo,telefono, id_rol from usuarios");
+			
 			
 			if(rs!=null) {
 				while(rs.next()) {
@@ -27,6 +29,7 @@ public class UserDAO {
 					u.setApellido(rs.getString("apellido"));
 					u.setCorreo(rs.getString("correo"));
 					u.setTelefono(rs.getString("telefono"));
+					u.setRol(rs.getInt("id_rol"));
 					
 					users.add(u);
 				}
@@ -56,13 +59,16 @@ public class UserDAO {
 		Usuario u=null;
 		PreparedStatement stmt=null;
 		ResultSet rs=null;
+		
 		try {
 			stmt=ConnectionDB.getInstancia().getConn().prepareStatement(
-					"select id_usuario,usuario,nombre,apellido,correo,telefono from usuarios where usuario=? and clave=?"
+					"select id_usuario,usuario,nombre,apellido,correo,telefono, id_rol from usuarios where usuario=? and clave=?"
 					);
 			stmt.setString(1, user.getUsuario());
 			stmt.setString(2, user.getClave());
 			rs=stmt.executeQuery();
+			
+			
 			if(rs!=null && rs.next()) {
 				u=new Usuario();
 				
@@ -72,7 +78,7 @@ public class UserDAO {
 				u.setApellido(rs.getString("apellido"));
 				u.setCorreo(rs.getString("correo"));
 				u.setTelefono(rs.getString("telefono"));
-				
+				u.setRol(rs.getInt("id_rol"));
 
 			}
 		} catch (SQLException e) {
@@ -95,13 +101,16 @@ public class UserDAO {
 		Usuario u=null;
 		PreparedStatement stmt=null;
 		ResultSet rs=null;
+		
 		try {
 			stmt=ConnectionDB.getInstancia().getConn().prepareStatement(
-					"select id_usuario,usuario,nombre,apellido,correo,telefono from usuarios where id_usuario = ?"
+					"select id_usuario,usuario,nombre,apellido,correo,telefono, id_rol from usuarios where id_usuario = ?"
 					);
 			stmt.setInt(1, id_usuario);
 			
 			rs=stmt.executeQuery();
+			
+			
 			if(rs!=null && rs.next()) {
 				u=new Usuario();
 				
@@ -111,8 +120,8 @@ public class UserDAO {
 				u.setApellido(rs.getString("apellido"));
 				u.setCorreo(rs.getString("correo"));
 				u.setTelefono(rs.getString("telefono"));
+				u.setRol(rs.getInt("id_rol"));
 				
-
 			}
 		} catch (SQLException e) {
 			e.printStackTrace(); 
@@ -138,7 +147,7 @@ public class UserDAO {
 		try {
 			stmt=ConnectionDB.getInstancia().getConn().
 					prepareStatement(
-							"insert into usuarios(usuario, clave, nombre, apellido, correo, telefono) values(?,?,?,?,?,?)",
+							"insert into usuarios(usuario, clave, nombre, apellido, correo, telefono, id_rol) values(?,?,?,?,?,?,?)",
 							PreparedStatement.RETURN_GENERATED_KEYS
 							);
 			stmt.setString(1, u.getUsuario());
@@ -147,7 +156,7 @@ public class UserDAO {
 			stmt.setString(4, u.getApellido());
 			stmt.setString(5, u.getCorreo());
 			stmt.setString(6, u.getTelefono());
-
+			stmt.setInt(7, u.getRol());
 			stmt.executeUpdate();
 			
 			keyResultSet=stmt.getGeneratedKeys();
@@ -202,24 +211,27 @@ public class UserDAO {
 	
 	
 	
-	public void delete(Usuario user) {
+	public boolean eliminarUsuario(int idUsuario) {
 		
 		PreparedStatement stmt=null;
 		try {
 			stmt=ConnectionDB.getInstancia().getConn().prepareStatement(
-					"delete * from usuarios where id_usuario=?"
+					"delete from usuarios where id_usuario=?"
 					);
-			stmt.setInt(1, user.getIdUsuario());
+			stmt.setInt(1, idUsuario);
 			int rowsAffected = stmt.executeUpdate();
 			
-			if(rowsAffected > 1) {
-				System.out.println("Se ha borrado el usuario con el ID: " +  user.getIdUsuario());
+			if(rowsAffected > 0) {
+				System.out.println("Se ha borrado el usuario con el ID: " +  idUsuario);
+				return true;
 			}else {
 				System.out.println("No se ha encontrado ningún usuario");
+				return false;
 			}
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return false;
 		}finally {
 			try {
 				if(stmt!=null) {stmt.close();}

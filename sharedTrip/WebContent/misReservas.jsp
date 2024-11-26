@@ -49,6 +49,7 @@
                         <p class="card-text">Total: $<%= reserva.getViaje().getPrecio_unitario() %></p>
                         <form action="cancelarReserva" method="post">
                             <input type="hidden" name="viajeId" value="<%= reserva.getViaje().getIdViaje() %>">
+                            <input type="hidden" name="reservaId" value="<%= reserva.getIdReserva() %>">
                             <button type="submit" class="btn btn-danger">Cancelar Reserva</button>
                         </form>
                     </div>

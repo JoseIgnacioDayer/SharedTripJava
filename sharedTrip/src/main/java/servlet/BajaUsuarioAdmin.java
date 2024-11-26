@@ -1,26 +1,27 @@
 package servlet;
 
 import java.io.IOException;
+import java.util.LinkedList;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import entidades.Usuario;
 import logic.UserController;
 
-/**
- * Servlet implementation class Register
- */
-@WebServlet("/Register")
-public class Register extends HttpServlet {
+
+@WebServlet("/BajaUsuarioAdmin")
+public class BajaUsuarioAdmin extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public Register() {
+    public BajaUsuarioAdmin() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -37,23 +38,20 @@ public class Register extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Usuario u = new Usuario();
-		UserController ctrl = new UserController();
-		u.setNombre(request.getParameter("nombre"));
-		u.setApellido(request.getParameter("apellido"));
-		u.setCorreo(request.getParameter("correo"));
-		u.setUsuario(request.getParameter("usuario"));
-		u.setClave(request.getParameter("clave"));
-		u.setTelefono(request.getParameter("telefono"));
-		u.setRol(2); // Se deberia buscar el rol de usuario y hacerlo prolijo
+		HttpSession session = request.getSession();
+		UserController userController  = new UserController();
+		if(userController.deleteUser(Integer.parseInt(request.getParameter("id_usuario")))){
+			LinkedList<Usuario> usuarios = userController.getAll();
+			session.setAttribute("usuarios", usuarios);
+			session.setAttribute("mensaje", "Usuario dado de baja con éxito.");
+		}else {
+			session.setAttribute("mensaje", "Error al dar de baja el usuario.");
+		}
+		response.sendRedirect("usuarios.jsp");
 		
 		
 		
 		
-		ctrl.addUser(u);
-		response.sendRedirect("index.jsp");
-
-
 	}
 
 }

@@ -11,16 +11,16 @@ import entidades.Usuario;
 import logic.UserController;
 
 /**
- * Servlet implementation class Register
+ * Servlet implementation class RegistrarUsuarioAdmin
  */
-@WebServlet("/Register")
-public class Register extends HttpServlet {
+@WebServlet("/RegistrarUsuarioAdmin")
+public class RegistrarUsuarioAdmin extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public Register() {
+    public RegistrarUsuarioAdmin() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -45,15 +45,11 @@ public class Register extends HttpServlet {
 		u.setUsuario(request.getParameter("usuario"));
 		u.setClave(request.getParameter("clave"));
 		u.setTelefono(request.getParameter("telefono"));
-		u.setRol(2); // Se deberia buscar el rol de usuario y hacerlo prolijo
-		
-		
-		
+		u.setRol(Integer.parseInt(request.getParameter("rol")));
 		
 		ctrl.addUser(u);
-		response.sendRedirect("index.jsp");
-
-
+		
+		response.sendRedirect(request.getContextPath() + "/usuarios");
 	}
 
 }

@@ -17,6 +17,9 @@
                     <li class="nav-item">
                         <a class="nav-link text-white" href="<%= request.getContextPath() %>/misVehiculos">Mis Vehículos</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="<%= request.getContextPath() %>/usuarios">Usuarios</a>
+                    </li>
                 <% } %>
             </ul>
 

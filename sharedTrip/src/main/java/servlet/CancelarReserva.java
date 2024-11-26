@@ -14,6 +14,7 @@ import data.ReservaDAO;
 import entidades.Reserva;
 import entidades.Usuario;
 import logic.ReservaController;
+import logic.ViajeController;
 
 /**
  * Servlet implementation class CancelarReserva
@@ -43,15 +44,19 @@ public class CancelarReserva extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
+		int idReserva = Integer.parseInt(request.getParameter("reservaId"));
 		int idViaje = Integer.parseInt(request.getParameter("viajeId"));
 		Usuario u = (Usuario) session.getAttribute("usuario");
+		ViajeController viajeController = new ViajeController();
 		ReservaController reservaCtrl = new ReservaController();
-		boolean cancelada = reservaCtrl.cancelar(idViaje,u.getIdUsuario());
+		boolean cancelada = reservaCtrl.cancelar(idReserva);
+		
 		if (cancelada) {
           
             LinkedList<Reserva> misReservas = reservaCtrl.getReservasUsuario(u);
             session.setAttribute("misreservas", misReservas);
-            
+            int cantidad = reservaCtrl.obtenerCantidad(idReserva);
+            viajeController.actualizarCantidad(idViaje, cantidad * (-1));
             session.setAttribute("mensaje", "Reserva cancelada con éxito.");
         } else {
             session.setAttribute("mensaje", "Error al cancelar la reserva. Puede que no exista.");

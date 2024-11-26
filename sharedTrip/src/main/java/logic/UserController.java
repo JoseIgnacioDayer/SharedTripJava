@@ -13,11 +13,7 @@ public class UserController {
 	}
 	
 	public Usuario validate(Usuario u) {
-		/* para hacer más seguro el manejo de passwords este sería un lugar 
-		 * adecuado para generar un hash de la password utilizando un cifrado
-		 * asimétrico como sha256 y utilizar el hash en lugar de la password en plano 
-		 * md5 creo q es una opcion tamb
-		 */
+
 		return usuarioDAO.getByUser(u);
 	}
 
@@ -28,6 +24,11 @@ public class UserController {
 	public void addUser(Usuario u) {
 		usuarioDAO.add(u);
 	}
-
+	
+	public boolean deleteUser(int idUsuario) {
+		return this.usuarioDAO.eliminarUsuario(idUsuario);
+	}
+	
+	
 
 }

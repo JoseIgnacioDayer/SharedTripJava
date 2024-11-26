@@ -31,7 +31,11 @@ public class ReservaController {
 	}
 	
 	
-	public boolean cancelar(int idViaje, int idUsuario) {
-		return this.reservaDAO.cancelarReserva(idViaje, idUsuario);
+	public boolean cancelar(int idReserva) {
+		return this.reservaDAO.cancelarReserva(idReserva);
+	}
+	
+	public int obtenerCantidad(int idReserva) {
+		return this.reservaDAO.obtenerCantidad(idReserva);
 	}
 }

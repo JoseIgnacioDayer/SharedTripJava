@@ -8,7 +8,14 @@ public class Usuario {
 	public String apellido;
 	public String correo;
 	public String telefono;
+	public int rol;
 	
+	public int getRol() {
+		return rol;
+	}
+	public void setRol(int rol) {
+		this.rol = rol;
+	}
 	public int getIdUsuario() {
 		return idUsuario;
 	}
@@ -65,7 +72,7 @@ public class Usuario {
 
 	
 	public Usuario(int idUsuario, String usuario, String clave, String nombre, String apellido, String correo,
-			String telefono) {
+			String telefono, int rol) {
 		super();
 		this.idUsuario = idUsuario;
 		this.usuario = usuario;
@@ -74,5 +81,6 @@ public class Usuario {
 		this.apellido = apellido;
 		this.correo = correo;
 		this.telefono = telefono;
+		this.rol = rol;
 	}
 }

@@ -7,7 +7,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import entidades.Rol;
 import entidades.Usuario;
+import logic.RolController;
 import logic.UserController;
 
 
@@ -42,9 +45,15 @@ public class Signin extends HttpServlet {
             request.setAttribute("errorMessage", "Usuario o contraseña incorrectos.");
             request.getRequestDispatcher("login.jsp").forward(request, response);
         } else {
+        	
+        	RolController rolCtrl = new RolController();
+        	Rol rol = rolCtrl.getOne(u.getRol());
+        	
             request.getSession().setAttribute("usuario", u);
             request.getSession().setAttribute("nombre", u.getNombre());
             request.getSession().setAttribute("apellido", u.getApellido());
+            request.getSession().setAttribute("rol", rol.getNombre());
+           
             
             response.sendRedirect(request.getContextPath() +"/");
         }

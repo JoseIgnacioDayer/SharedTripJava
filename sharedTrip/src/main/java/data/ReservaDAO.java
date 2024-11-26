@@ -16,12 +16,12 @@ public class ReservaDAO {
 	
 	try {
 		stmt= ConnectionDB.getInstancia().getConn().createStatement();
-		rs= stmt.executeQuery("select fecha_reserva,cantidad_pasajeros_reservada,reserva_cancelada,id_viaje,id_pasajero_reserva from reservas");
+		rs= stmt.executeQuery("select idReserva,fecha_reserva,cantidad_pasajeros_reservada,reserva_cancelada,id_viaje,id_pasajero_reserva from reservas");
 		
 		if(rs!=null) {
 			while(rs.next()) {
 				Reserva r=new Reserva();
-				
+				r.setIdReserva(rs.getInt("idReserva"));
 				r.setFecha_reserva(rs.getString("fecha_reserva"));
 				r.setCantidad_pasajeros_reservada(rs.getInt("cantidad_pasajeros_reservada"));
 				r.setReserva_cancelada(rs.getBoolean("reserva_cancelada"));
@@ -50,6 +50,38 @@ public class ReservaDAO {
 	}
 	
 	return reservas;}
+	
+public int obtenerCantidad(int idReserva) {
+	
+	PreparedStatement stmt = null;
+	ResultSet rs= null;
+	int cantidad = 0;
+	try {
+		stmt = ConnectionDB.getInstancia().getConn().prepareStatement(
+				"SELECT cantidad_pasajeros_reservada FROM reservas where idReserva =?");
+		stmt.setInt(1, idReserva);
+	
+		
+		rs = stmt.executeQuery();
+		if(rs!=null && rs.next()) {
+			 cantidad = rs.getInt("cantidad_pasajeros_reservada");
+		}
+	}catch (SQLException e) {
+		e.printStackTrace(); 
+	}finally {
+		try {
+			if(rs!=null) {rs.close();}
+			if(stmt!=null) {stmt.close();}
+			ConnectionDB.getInstancia().releaseConn();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	return cantidad;
+}
+	
+	
 
 public LinkedList<Reserva> getByUser(Usuario u) {
 		
@@ -60,7 +92,7 @@ public LinkedList<Reserva> getByUser(Usuario u) {
 		ResultSet rs=null;
 		try {
 			stmt=ConnectionDB.getInstancia().getConn().prepareStatement(
-				"SELECT fecha_reserva, cantidad_pasajeros_reservada, reserva_cancelada, " 
+				"SELECT idReserva, fecha_reserva, cantidad_pasajeros_reservada, reserva_cancelada, " 
 				+ "v.id_viaje, v.origen, v.destino, v.fecha, v.lugares_disponibles, v.precio_unitario, "
 				+ "r.id_pasajero_reserva, u.* FROM reservas r "
 				+ "INNER JOIN viajes v ON r.id_viaje = v.id_viaje "
@@ -98,7 +130,7 @@ public LinkedList<Reserva> getByUser(Usuario u) {
 				r.setFecha_reserva(rs.getString("fecha_reserva"));
 				r.setCantidad_pasajeros_reservada(rs.getInt("cantidad_pasajeros_reservada"));
 				r.setReserva_cancelada(rs.getBoolean("reserva_cancelada"));
-				
+				r.setIdReserva(rs.getInt("idReserva"));
 				r.setId_pasajero_reserva(rs.getInt("id_pasajero_reserva"));
 				r.setViaje(viaje);
 				
@@ -159,18 +191,18 @@ public void add(Reserva r) {
 
 
 
-public void update(Reserva r, Date fDate) {
+public void update(Reserva r, int idReserva) {
 	PreparedStatement stmt = null;
 	
 	try {
 		stmt= ConnectionDB.getInstancia().getConn().prepareStatement(
-				"UPDATE reservas SET (cantidad_pasajeros_reservada = ?, reserva_cancelada = ? , id_viaje =?, id_pasajero_reserva=?) where fecha_reserva = ? ");
+				"UPDATE reservas SET (cantidad_pasajeros_reservada = ?, reserva_cancelada = ? , id_viaje =?, id_pasajero_reserva=?) where idReserva = ? ");
 		
 		stmt.setInt(1, r.getCantidad_pasajeros_reservada());
 		stmt.setBoolean(2, r.isReserva_cancelada());
 		stmt.setInt(3, r.getViaje().getIdViaje());
 		stmt.setInt(4, r.getId_pasajero_reserva());
-		stmt.setDate(5, fDate);
+		stmt.setInt(5, idReserva);
 
 		
 		stmt.executeUpdate();
@@ -188,16 +220,16 @@ public void update(Reserva r, Date fDate) {
     }
 }
 
-public boolean cancelarReserva(int id_viaje, int id_usuario) {
+public boolean cancelarReserva(int idReserva) {
 	 	PreparedStatement stmt = null;
 	    boolean cancelada = false;
 
 	    try {
 	        stmt = ConnectionDB.getInstancia().getConn().prepareStatement(
-	            "UPDATE reservas SET reserva_cancelada = true WHERE id_viaje = ? AND id_pasajero_reserva = ?"
+	            "UPDATE reservas SET reserva_cancelada = true WHERE idReserva = ?"
 	        );
-	        stmt.setInt(1, id_viaje);
-	        stmt.setInt(2, id_usuario);
+	        stmt.setInt(1, idReserva);
+	        
 
 	        int rowsAffected = stmt.executeUpdate();
 	        cancelada = (rowsAffected > 0); 
@@ -224,9 +256,9 @@ public void delete(Reserva r) {
 	PreparedStatement stmt=null;
 	try {
 		stmt=ConnectionDB.getInstancia().getConn().prepareStatement(
-				"delete * from reservas where fecha_reserva=?"
+				"delete from reservas where idReserva = ?"
 				);
-		stmt.setString(1, r.getFecha_reserva());
+		stmt.setInt(1, r.getIdReserva());
 		int rowsAffected = stmt.executeUpdate();
 		
 		if(rowsAffected > 1) {

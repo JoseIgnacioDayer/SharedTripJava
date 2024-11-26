@@ -14,17 +14,22 @@
         <servlet-class>servlet.ViajesListado</servlet-class>
     </servlet>
 
-    <!-- Mapeo del Servlet -->
+    
     <servlet-mapping>
         <servlet-name>ViajesListado</servlet-name>
         <url-pattern>/o</url-pattern>
     </servlet-mapping>
 
-    <!-- Página de bienvenida: El Servlet ViajesListado actúa como punto de entrada -->
+    
     <welcome-file-list>
         <welcome-file>ViajesListado</welcome-file>
     </welcome-file-list>
 
+
+	<session-config>
+    	<session-timeout>30</session-timeout> 
+	</session-config>
+	
 
 </web-app>
 
