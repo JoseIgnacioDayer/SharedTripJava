@@ -2,6 +2,6 @@
 **/.metadata/
 **/.settings/
 **/build/
-Servers/
+Servers/**
 .classpath
-/Servers
+
