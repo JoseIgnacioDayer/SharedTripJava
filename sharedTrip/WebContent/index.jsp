@@ -60,11 +60,17 @@
                                 <p class="card-text">Origen: <%= viaje.getOrigen() %></p>
                                 <p class="card-text">Fecha: <%= viaje.getFecha() %></p>
                                 <p class="card-text">Lugares Disponibles: <%= viaje.getLugares_disponibles() %></p>
+                                
+                                <%
+                                if (viaje.getLugares_disponibles() > 0 ) { %>
                                 <form action="reservar" method="post">
                     				<input type="hidden" name="viajeId" value="<%= viaje.getIdViaje() %>">
                     				<input type="number" name="cantPasajeros" min="1" max="<%= viaje.getLugares_disponibles()%>" value="1" required>
                     				<button type="submit" class="btn btn-success">Reservar</button>
-                			</form>
+                				</form>
+                				<% } else {%>
+                				<p class="text-danger font-weight-bold">No hay lugares disponibles</p>
+                				<% } %>
                             </div>
                         </div>
                     </div>
