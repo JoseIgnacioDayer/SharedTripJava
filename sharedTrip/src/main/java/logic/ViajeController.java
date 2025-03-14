@@ -19,6 +19,11 @@ public class ViajeController {
 		
 	}
 	
+	public LinkedList<Viaje> getAllBySearch(String origen, String destino, String fecha){
+		LinkedList<Viaje> viajes = viajeDAO.getAllBySearch(origen, destino, fecha);
+		return viajes;
+	}
+	
 	public Viaje getOne(int id) {
 		return this.viajeDAO.getByViaje(id);
 	}
@@ -39,5 +44,7 @@ public class ViajeController {
 		return this.viajeDAO.cancelarViaje(idViaje, idUsuario);
 		
 	}
+	
+	
 
 }

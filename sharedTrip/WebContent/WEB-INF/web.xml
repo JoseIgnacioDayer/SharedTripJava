@@ -5,10 +5,6 @@
                              http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
 
-
-
-
-
     <servlet>
         <servlet-name>ViajesListado</servlet-name>
         <servlet-class>servlet.ViajesListado</servlet-class>
